@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct weatherButton: View {
+    @State private var isDarkModeActive: Bool = false
     var text: String
     var bkgColor: Color
     var colorText: Color
@@ -17,8 +18,13 @@ struct weatherButton: View {
             .frame(width: 280,height: 50)
             .fontWeight(.bold)
             .foregroundStyle(colorText)
-            .background(bkgColor)
+            .background(bkgColor.gradient)
             .clipShape(.capsule)
     }
 }
 
+struct weatherButton_Previews: PreviewProvider {
+    static var previews: some View {
+        weatherButton(text: "Preview", bkgColor: .blue, colorText: .white)
+    }
+}

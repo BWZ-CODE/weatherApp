@@ -9,17 +9,33 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var isDarkModeActive = false
+    @State var cities: Array = ["Bogota", "Medellin", "Cartagena", "Cali", "Barranquilla"]
     
     
     var body: some View {
         ZStack{
-            backgroundGrad(isDarkModeActive: $isDarkModeActive)
+            backgroundGrad(isDarkModeActive: isDarkModeActive)
             VStack{
-                Text("Cupertino, CA").font(.system(size: 32, weight: .bold, design: .default))
-                    .foregroundStyle(.white)
-                    .padding()
+                ScrollView(.horizontal, showsIndicators: true){
+                    HStack (spacing: 100){
+                        VStack{
+                            ExtractedView(texto: cities[0])
+                            actualWeatherView(imageName: isDarkModeActive ? "moon.fill" : "sun.dust.fill", degrees: 40)
+                        }
+                        VStack{
+                            ExtractedView(texto: cities[1])
+                            actualWeatherView(imageName: "sun.max.fill", degrees: 40)
+                        }
+                        VStack{
+                            ExtractedView(texto: cities[2])
+                            actualWeatherView(imageName: "cloud.heavyrain.fill", degrees: 12)
+                        }
+                        
+                    }.padding()
+                       
+                }
                 
-                actualWeatherView(imageName: isDarkModeActive ? "moon.fill" : "sun.dust.fill", degrees: 40)
+               
         
                 HStack(spacing: 30){
                         daysView(dayWeek: "TUE",
@@ -45,8 +61,8 @@ struct ContentView: View {
                     isDarkModeActive.toggle()
                 }label: {
                     weatherButton(text: "Change Day Time",
-                               bkgColor: .white,
-                               colorText: .blue)
+                                  bkgColor: isDarkModeActive ? .gray : .blue,
+                                  colorText: .white)
                         
                 }
                 Spacer()
@@ -84,10 +100,13 @@ struct daysView: View {
 }
 
 struct backgroundGrad: View {
-    @Binding var isDarkModeActive: Bool
+    var isDarkModeActive: Bool
     
     var body: some View {
-        LinearGradient(colors: [isDarkModeActive ? .black : .blue, isDarkModeActive ? .gray : .white], startPoint: .topLeading, endPoint: .bottomTrailing)
+//        LinearGradient(colors: [isDarkModeActive ? .black : .blue, isDarkModeActive ? .gray : .white], startPoint: .topLeading, endPoint: .bottomTrailing)
+//            .ignoresSafeArea(edges: .all)
+        ContainerRelativeShape()
+            .fill(isDarkModeActive ? Color.gray.gradient : Color.blue.gradient)
             .ignoresSafeArea(edges: .all)
     }
 }
@@ -99,7 +118,7 @@ struct actualWeatherView: View {
     var body: some View {
         VStack(spacing: 8) {
             Image(systemName: imageName)
-                .renderingMode(.original)
+                .symbolRenderingMode(.multicolor)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 180, height: 180)
@@ -111,3 +130,13 @@ struct actualWeatherView: View {
     }
 }
 
+
+struct ExtractedView: View {
+    var texto: String
+    
+    var body: some View {
+        Text(texto).font(.system(size: 32, weight: .bold, design: .default))
+            .foregroundStyle(.white)
+            .padding()
+    }
+}
